@@ -7,7 +7,7 @@ pub fn createVTable(comptime T: type) type {
         var count: usize = 0;
         for (decls) |decl| {
             const func = @field(T, decl.name);
-            const info = @typeInfo(func);
+            const info = @typeInfo(@TypeOf(func));
             if (std.meta.activeTag(info) == .Fn) count += 1;
 
             const funcInfo = info.Fn;
@@ -19,7 +19,7 @@ pub fn createVTable(comptime T: type) type {
         var i: usize = 0;
         for (decls) |decl| {
             const func = @field(T, decl.name);
-            const info = @typeInfo(func);
+            const info = @typeInfo(@TypeOf(func));
             if (std.meta.activeTag(info) != .Fn) continue;
 
             const funcInfo = info.Fn;
@@ -50,7 +50,7 @@ pub fn createVTable(comptime T: type) type {
                                 .is_generic = funcInfo.is_generic,
                                 .is_var_args = funcInfo.is_var_args,
                                 .return_type = funcInfo.return_type,
-                                .params = params,
+                                .params = &params,
                             },
                         }),
                         .is_allowzero = false,
@@ -67,9 +67,9 @@ pub fn createVTable(comptime T: type) type {
 
         return @Type(.{
             .Struct = .{
-                .layout = .auto,
-                .fields = fields,
-                .decls = .{},
+                .layout = .Auto,
+                .fields = &fields,
+                .decls = &.{},
                 .is_tuple = false,
             },
         });
