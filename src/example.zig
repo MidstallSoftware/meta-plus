@@ -26,5 +26,5 @@ const Mixed = metaplus.fields.mix(struct {
 pub fn main() void {
     printDecl(metaplus);
 
-    std.debug.print("{}\n", .{Mixed{}});
+    std.debug.print("{}\n{}\n", .{ Mixed{}, metaplus.fields.rename(Mixed, "a", "x"){} });
 }

@@ -57,3 +57,32 @@ pub fn mix(comptime Super: type, comptime Extend: type) type {
         },
     });
 }
+
+pub fn rename(comptime T: type, comptime needle: []const u8, comptime replacement: []const u8) type {
+    if (std.meta.activeTag(@typeInfo(T)) != .Struct) @compileError("Type must be a struct");
+
+    const info = @typeInfo(T).Struct;
+    var fields: [info.fields.len]std.builtin.Type.StructField = undefined;
+
+    for (info.fields, &fields) |src, *dst| {
+        var name: [src.name.len]u8 = undefined;
+        _ = std.mem.replace(u8, src.name, needle, replacement, &name);
+        dst.* = .{
+            .name = &name,
+            .type = src.type,
+            .default_value = src.default_value,
+            .is_comptime = src.is_comptime,
+            .alignment = src.alignment,
+        };
+    }
+
+    return @Type(.{
+        .Struct = .{
+            .layout = info.layout,
+            .backing_integer = info.backing_integer,
+            .fields = &fields,
+            .decls = &.{},
+            .is_tuple = info.is_tuple,
+        },
+    });
+}
