@@ -1,5 +1,7 @@
 const std = @import("std");
 
+pub const fields = @import("structs/fields.zig");
+
 pub fn createVTable(comptime T: type) type {
     comptime {
         const decls = std.meta.declarations(T);
@@ -14,7 +16,7 @@ pub fn createVTable(comptime T: type) type {
             if (funcInfo.params.len < 1) continue;
         }
 
-        var fields: [count]std.builtin.Type.StructField = undefined;
+        var fieldsList: [count]std.builtin.Type.StructField = undefined;
 
         var i: usize = 0;
         for (decls) |decl| {
@@ -34,7 +36,7 @@ pub fn createVTable(comptime T: type) type {
                 };
             }
 
-            fields[i] = .{
+            fieldsList[i] = .{
                 .name = decl.name,
                 .type = @Type(.{
                     .Pointer = .{
@@ -68,7 +70,7 @@ pub fn createVTable(comptime T: type) type {
         return @Type(.{
             .Struct = .{
                 .layout = .Auto,
-                .fields = &fields,
+                .fields = &fieldsList,
                 .decls = &.{},
                 .is_tuple = false,
             },
