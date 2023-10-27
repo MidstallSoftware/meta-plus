@@ -17,6 +17,14 @@ fn printDecl(comptime T: type) void {
     }
 }
 
+const Mixed = metaplus.fields.mix(struct {
+    a: u8 = 0,
+}, struct {
+    b: u16 = 1,
+});
+
 pub fn main() void {
     printDecl(metaplus);
+
+    std.debug.print("{}\n", .{Mixed{}});
 }
