@@ -45,7 +45,7 @@ pub fn fieldIndexByName(comptime fields: []const std.builtin.Type.StructField, n
     return null;
 }
 
-pub fn mix(comptime Super: type, comptime Extend: type) type {
+pub fn mixStructs(comptime Super: type, comptime Extend: type) type {
     const superInfo = @typeInfo(Super).Struct;
     const extendInfo = @typeInfo(Extend).Struct;
 
@@ -83,4 +83,12 @@ pub fn mix(comptime Super: type, comptime Extend: type) type {
             .is_tuple = false,
         },
     });
+}
+
+pub fn mix(comptime Super: type, comptime Extend: type) type {
+    if (std.meta.activeTag(@typeInfo(Extend)) != std.meta.activeTag(@typeInfo(Super))) @compileError("Super and Extend must be same type");
+    return switch (@typeInfo(Super)) {
+        .Struct => mixStructs(Super, Extend),
+        else => |f| @compileError("Not supported: " + f),
+    };
 }
