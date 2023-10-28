@@ -10,7 +10,7 @@ pub fn build(b: *std.Build) void {
 
     const step_test = b.step("test", "Run all unit tests");
 
-    const test_main = b.addTest(.{
+    const unit_tests = b.addTest(.{
         .root_source_file = .{
             .path = b.pathFromRoot("src/meta+.zig"),
         },
@@ -18,7 +18,8 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    step_test.dependOn(&test_main.step);
+    const run_unit_tests = b.addRunArtifact(unit_tests);
+    step_test.dependOn(&run_unit_tests.step);
 
     const exe_example = b.addExecutable(.{
         .name = "example",
@@ -31,5 +32,4 @@ pub fn build(b: *std.Build) void {
 
     exe_example.addModule("meta+", vizops);
     b.installArtifact(exe_example);
-    b.installArtifact(test_main);
 }
