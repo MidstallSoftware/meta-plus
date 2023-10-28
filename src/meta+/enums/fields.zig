@@ -1,9 +1,8 @@
 const std = @import("std");
+const types = @import("../types.zig");
 
 pub fn rename(comptime T: type, comptime needle: []const u8, comptime replacement: []const u8) type {
-    if (std.meta.activeTag(@typeInfo(T)) != .Enum) @compileError("Type must be an enum");
-
-    const info = @typeInfo(T).Enum;
+    const info = types.ensure(T, .Enum) orelse @panic("Type must be an enum");
     var fields: [info.fields.len]std.builtin.Type.EnumField = undefined;
 
     for (info.fields, &fields) |src, *dst| {

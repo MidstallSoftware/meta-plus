@@ -1,4 +1,5 @@
 const std = @import("std");
+const types = @import("../types.zig");
 
 pub const Empty = std.builtin.Type.StructField{
     .name = "",
@@ -16,11 +17,8 @@ pub fn indexByName(comptime fields: []const std.builtin.Type.StructField, name: 
 }
 
 pub fn mix(comptime Super: type, comptime Extend: type) type {
-    if (std.meta.activeTag(@typeInfo(Extend)) != std.meta.activeTag(@typeInfo(Super))) @compileError("Super and Extend must be same type");
-    if (std.meta.activeTag(@typeInfo(Super)) != .Struct) @compileError("Types must be structs");
-
-    const superInfo = @typeInfo(Super).Struct;
-    const extendInfo = @typeInfo(Extend).Struct;
+    const superInfo = types.ensure(Super, .Struct) orelse @panic("Super type must be a struct");
+    const extendInfo = types.ensure(Extend, .Struct) orelse @panic("Extend type must be a struct");
 
     if (extendInfo.layout != superInfo.layout) @compileError("Super and extend struct layouts must be the same");
     if (extendInfo.backing_integer != superInfo.backing_integer) @compileError("Super and extend struct backing integers must be the same");

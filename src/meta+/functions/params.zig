@@ -1,9 +1,8 @@
 const std = @import("std");
+const types = @import("../types.zig");
 
 pub fn tuple(comptime T: type) type {
-    if (std.meta.activeTag(@typeInfo(T)) != .Fn) @compileError("Type is not a function");
-
-    const info = @typeInfo(T).Fn;
+    const info = types.ensure(T, .Fn) orelse @panic("Type is not a function");
 
     var count: usize = 0;
     for (info.params) |param| {
