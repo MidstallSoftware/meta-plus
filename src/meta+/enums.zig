@@ -1,5 +1,6 @@
 const std = @import("std");
 const testing = std.testing;
+const metaTesting = @import("testing.zig");
 
 pub const fields = @import("enums/fields.zig");
 
@@ -33,18 +34,11 @@ test "fromDecls using a struct" {
         pub const c = 3;
     };
 
-    const value = fromDecls(decls);
-
     const expected = enum(u8) {
         a = 0,
         b = 1,
         c = 2,
     };
 
-    try testing.expectEqual(@typeInfo(value).Enum.fields.len, @typeInfo(expected).Enum.fields.len);
-
-    inline for (@typeInfo(value).Enum.fields, @typeInfo(expected).Enum.fields) |a, b| {
-        try testing.expectEqualStrings(a.name, b.name);
-        try testing.expectEqual(a.value, b.value);
-    }
+    try metaTesting.expectEqual(fromDecls(decls), expected);
 }
