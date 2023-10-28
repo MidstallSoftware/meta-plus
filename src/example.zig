@@ -17,6 +17,10 @@ fn printDecl(comptime T: type) void {
     }
 }
 
+const VTable = metaplus.structs.vTable(struct {
+    pub fn print(_: @This()) void {}
+});
+
 const Mixed = metaplus.fields.mix(struct {
     a: u8 = 0,
 }, struct {
@@ -26,5 +30,6 @@ const Mixed = metaplus.fields.mix(struct {
 pub fn main() void {
     printDecl(metaplus);
 
+    std.debug.print("{}\n", .{VTable});
     std.debug.print("{}\n{}\n", .{ Mixed{}, metaplus.fields.rename(Mixed, "a", "x"){} });
 }

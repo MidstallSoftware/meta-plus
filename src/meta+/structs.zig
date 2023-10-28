@@ -2,7 +2,7 @@ const std = @import("std");
 
 pub const fields = @import("structs/fields.zig");
 
-pub fn createVTable(comptime T: type) type {
+pub fn vTable(comptime T: type) type {
     comptime {
         const decls = std.meta.declarations(T);
 
