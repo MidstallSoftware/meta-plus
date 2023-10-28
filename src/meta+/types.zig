@@ -1,19 +1,16 @@
 const std = @import("std");
 const testing = std.testing;
 
-pub fn tag(comptime T: type) std.meta.Tag(std.builtin.Type) {
+pub inline fn tag(comptime T: type) std.meta.Tag(std.builtin.Type) {
     return std.meta.activeTag(@typeInfo(T));
 }
 
-pub fn tagOf(value: anytype) std.meta.Tag(std.builtin.Type) {
+pub inline fn tagOf(value: anytype) std.meta.Tag(std.builtin.Type) {
     return tag(@TypeOf(value));
 }
 
-pub fn ensure(comptime T: type, comptime kind: std.meta.Tag(std.builtin.Type)) ?std.meta.TagPayloadByName(std.builtin.Type, @tagName(kind)) {
-    if (std.meta.activeTag(@typeInfo(T)) == kind) {
-        return @field(@typeInfo(T), @tagName(kind));
-    }
-    return null;
+pub inline fn ensure(comptime T: type, comptime kind: std.builtin.TypeId) ?std.meta.TagPayload(std.builtin.Type, kind) {
+    return if (@typeInfo(T) == kind) @field(@typeInfo(T), @tagName(kind)) else null;
 }
 
 test "tag" {
@@ -30,4 +27,5 @@ test "ensure type is what is wanted" {
     try testing.expect(ensure(struct {}, .Struct) != null);
     try testing.expect(ensure(u8, .Int) != null);
     try testing.expect(ensure(f32, .Float) != null);
+    try testing.expect(ensure(void, .Float) == null);
 }
