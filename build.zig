@@ -3,6 +3,7 @@ const std = @import("std");
 pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
+    const no_docs = b.option(bool, "no-docs", "skip installing documentation") orelse false;
 
     const vizops = b.addModule("meta+", .{
         .source_file = .{ .path = b.pathFromRoot("src/meta+.zig") },
@@ -32,4 +33,14 @@ pub fn build(b: *std.Build) void {
 
     exe_example.addModule("meta+", vizops);
     b.installArtifact(exe_example);
+
+    if (!no_docs) {
+        const docs = b.addInstallDirectory(.{
+            .source_dir = unit_tests.getEmittedDocs(),
+            .install_dir = .prefix,
+            .install_subdir = "docs",
+        });
+
+        b.getInstallStep().dependOn(&docs.step);
+    }
 }
