@@ -1,6 +1,7 @@
 const std = @import("std");
 const types = @import("../types.zig");
 
+/// Generates a tuple type out of the parameters of a function type
 pub fn tuple(comptime T: type) type {
     const info = types.ensure(T, .Fn) orelse @panic("Type is not a function");
 

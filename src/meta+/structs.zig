@@ -2,6 +2,7 @@ const std = @import("std");
 
 pub const fields = @import("structs/fields.zig");
 
+/// Generates a virtual vtable type from the declarations of a type
 pub fn vTable(comptime T: type) type {
     comptime {
         const decls = std.meta.declarations(T);

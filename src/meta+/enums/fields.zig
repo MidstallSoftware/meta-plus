@@ -1,6 +1,7 @@
 const std = @import("std");
 const types = @import("../types.zig");
 
+/// Renames the fields in type which has needle with replacement
 pub fn rename(comptime T: type, comptime needle: []const u8, comptime replacement: []const u8) type {
     const info = types.ensure(T, .Enum) orelse @panic("Type must be an enum");
     var fields: [info.fields.len]std.builtin.Type.EnumField = undefined;

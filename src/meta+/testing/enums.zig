@@ -2,6 +2,7 @@ const std = @import("std");
 const testing = std.testing;
 const types = @import("../types.zig");
 
+/// Function for testing if the resulting enum type (actual) matches the expected enum type
 pub fn expectEqual(comptime Expected: type, comptime Actual: type) !void {
     if (types.tag(Expected) != types.tag(Actual) or types.tag(Expected) != .Enum) return error.InvalidType;
 

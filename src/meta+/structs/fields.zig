@@ -1,6 +1,7 @@
 const std = @import("std");
 const types = @import("../types.zig");
 
+/// Constant which represents an empty structure field
 pub const Empty = std.builtin.Type.StructField{
     .name = "",
     .type = undefined,
@@ -9,6 +10,8 @@ pub const Empty = std.builtin.Type.StructField{
     .alignment = 0,
 };
 
+/// Returns the index of the field by name which is in an array of structure fields.
+/// If the field cannot be found, returns null.
 pub fn indexByName(comptime fields: []const std.builtin.Type.StructField, name: []const u8) ?usize {
     for (fields, 0..) |field, i| {
         if (std.mem.eql(u8, field.name, name)) return i;
@@ -16,6 +19,7 @@ pub fn indexByName(comptime fields: []const std.builtin.Type.StructField, name: 
     return null;
 }
 
+/// Mixes fields from structure extend into structure super
 pub fn mix(comptime Super: type, comptime Extend: type) type {
     const superInfo = types.ensure(Super, .Struct) orelse @panic("Super type must be a struct");
     const extendInfo = types.ensure(Extend, .Struct) orelse @panic("Extend type must be a struct");
@@ -56,6 +60,7 @@ pub fn mix(comptime Super: type, comptime Extend: type) type {
     });
 }
 
+/// Renames the fields containing needle with replacement
 pub fn rename(comptime T: type, comptime needle: []const u8, comptime replacement: []const u8) type {
     if (std.meta.activeTag(@typeInfo(T)) != .Struct) @compileError("Type must be a struct");
 

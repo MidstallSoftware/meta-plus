@@ -1,18 +1,22 @@
 const std = @import("std");
 const testing = std.testing;
 
+/// Returns the enum tag active for the type
 pub inline fn tag(comptime T: type) std.meta.Tag(std.builtin.Type) {
     return std.meta.activeTag(@typeInfo(T));
 }
 
+/// Similar to `tag` but works with an anytype instead of a comptime type
 pub inline fn tagOf(value: anytype) std.meta.Tag(std.builtin.Type) {
     return tag(@TypeOf(value));
 }
 
+/// Ensures the type matches the wanted type kind
 pub inline fn ensure(comptime T: type, comptime kind: std.builtin.TypeId) ?std.meta.TagPayload(std.builtin.Type, kind) {
     return if (@typeInfo(T) == kind) @field(@typeInfo(T), @tagName(kind)) else null;
 }
 
+/// Returns the fields array for the type
 pub inline fn fields(comptime T: type) ?[]const @field(std.builtin.Type, @tagName(tag(T)) ++ "Field") {
     return if (ensure(T, tag(T))) |info| (if (@hasField(@TypeOf(info), "fields")) @field(info, "fields") else null) else null;
 }

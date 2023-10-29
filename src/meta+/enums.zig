@@ -5,6 +5,7 @@ const types = @import("types.zig");
 
 pub const fields = @import("enums/fields.zig");
 
+/// Generates an enum from the fields of a type
 pub fn fromFields(comptime T: type) type {
     comptime {
         const f = types.fields(T) orelse @compileError("Incompatible type: " ++ @tagName(types.tag(T)));
@@ -28,6 +29,7 @@ pub fn fromFields(comptime T: type) type {
     }
 }
 
+/// Generates an enum from the declarations of a type
 pub fn fromDecls(comptime T: type) type {
     comptime {
         const decls = std.meta.declarations(T);
