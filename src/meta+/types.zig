@@ -13,6 +13,10 @@ pub inline fn ensure(comptime T: type, comptime kind: std.builtin.TypeId) ?std.m
     return if (@typeInfo(T) == kind) @field(@typeInfo(T), @tagName(kind)) else null;
 }
 
+pub inline fn fields(comptime T: type) ?[]const @field(std.builtin.Type, @tagName(tag(T)) ++ "Field") {
+    return if (ensure(T, tag(T))) |info| (if (@hasField(@TypeOf(info), "fields")) @field(info, "fields") else null) else null;
+}
+
 test "tag" {
     try testing.expectEqual(tag(u8), .Int);
     try testing.expectEqual(tag(f32), .Float);

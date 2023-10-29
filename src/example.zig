@@ -32,4 +32,5 @@ pub fn main() void {
 
     std.debug.print("{}\n", .{VTable});
     std.debug.print("{}\n{}\n", .{ Mixed{}, metaplus.fields.rename(Mixed, "a", "x"){} });
+    std.debug.print("{}\n", .{metaplus.enums.fromFields(struct { a: u8 })});
 }

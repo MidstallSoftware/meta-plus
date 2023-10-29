@@ -9,9 +9,13 @@ pub fn expectEqual(comptime Expected: type, comptime Actual: type) !void {
     const actualInfo = @typeInfo(Actual).Enum;
 
     try testing.expectEqual(expectedInfo.tag_type, actualInfo.tag_type);
+    try testing.expectEqual(expectedInfo.is_exhaustive, actualInfo.is_exhaustive);
     try testing.expectEqual(expectedInfo.fields.len, actualInfo.fields.len);
     try testing.expectEqual(expectedInfo.decls.len, actualInfo.decls.len);
-    try testing.expectEqual(expectedInfo.is_exhaustive, actualInfo.is_exhaustive);
+
+    if (expectedInfo.fields.len != actualInfo.fields.len) {
+        return error.FieldsLengthMismatch;
+    }
 
     inline for (expectedInfo.fields, actualInfo.fields) |a, b| {
         try testing.expectEqualStrings(a.name, b.name);
