@@ -6,14 +6,14 @@ pub fn build(b: *std.Build) void {
     const no_docs = b.option(bool, "no-docs", "skip installing documentation") orelse false;
 
     const vizops = b.addModule("meta+", .{
-        .source_file = .{ .path = b.pathFromRoot("src/meta+.zig") },
+        .source_file = .{ .path = b.pathFromRoot("meta+.zig") },
     });
 
     const step_test = b.step("test", "Run all unit tests");
 
     const unit_tests = b.addTest(.{
         .root_source_file = .{
-            .path = b.pathFromRoot("src/meta+.zig"),
+            .path = b.pathFromRoot("meta+.zig"),
         },
         .target = target,
         .optimize = optimize,
@@ -25,7 +25,7 @@ pub fn build(b: *std.Build) void {
     const exe_example = b.addExecutable(.{
         .name = "example",
         .root_source_file = .{
-            .path = b.pathFromRoot("src/example.zig"),
+            .path = b.pathFromRoot("example.zig"),
         },
         .target = target,
         .optimize = optimize,

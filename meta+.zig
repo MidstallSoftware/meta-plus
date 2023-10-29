@@ -1,3 +1,5 @@
+//!zig-autodoc-guide: README.md
+
 const stdTesting = @import("std").testing;
 
 /// Module for enum types
