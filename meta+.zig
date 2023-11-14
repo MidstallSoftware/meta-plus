@@ -20,6 +20,9 @@ pub const testing = @import("meta+/testing.zig");
 /// Module for types
 pub const types = @import("meta+/types.zig");
 
+/// Module for unions
+pub const unions = @import("meta+/unions.zig");
+
 test {
     stdTesting.refAllDecls(@This());
 }

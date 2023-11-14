@@ -1,6 +1,6 @@
 const std = @import("std");
 const testing = std.testing;
-const metaTesting = @import("testing.zig");
+const metaTesting = @import("testing.zig").enums;
 const types = @import("types.zig");
 
 pub const fields = @import("enums/fields.zig");
