@@ -10,9 +10,10 @@ pub fn fromDecls(comptime T: type) type {
         var fieldsList: [decls.len]std.builtin.Type.UnionField = undefined;
 
         for (decls, 0..) |decl, i| {
+            const f = @field(T, decl.name);
             fieldsList[i] = .{
                 .name = decl.name,
-                .type = @TypeOf(@field(T, decl.name)),
+                .type = if (@typeInfo(@TypeOf(f)) == .Type) f else @TypeOf(f),
                 .alignment = i,
             };
         }
