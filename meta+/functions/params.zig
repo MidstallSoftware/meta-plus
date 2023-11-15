@@ -20,7 +20,7 @@ pub fn tuple(comptime T: type) type {
                 .type = t,
                 .default_value = null,
                 .is_comptime = false,
-                .alignment = i,
+                .alignment = if (@sizeOf(t) > 0) @alignOf(t) else 0,
             };
             i += 1;
         }

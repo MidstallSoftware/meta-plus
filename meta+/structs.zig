@@ -37,32 +37,36 @@ pub fn vTable(comptime T: type) type {
                 };
             }
 
+            const fntype = @Type(.{
+                .Fn = .{
+                    .calling_convention = .Unspecified,
+                    .alignment = funcInfo.alignment,
+                    .is_generic = funcInfo.is_generic,
+                    .is_var_args = funcInfo.is_var_args,
+                    .return_type = funcInfo.return_type,
+                    .params = &params,
+                },
+            });
+
+            const ftype = @Type(.{
+                .Pointer = .{
+                    .size = .One,
+                    .is_const = true,
+                    .is_volatile = false,
+                    .alignment = if (@sizeOf(fntype) > 0) @alignOf(fntype) else 0,
+                    .address_space = .generic,
+                    .child = fntype,
+                    .is_allowzero = false,
+                    .sentinel = null,
+                },
+            });
+
             fieldsList[i] = .{
                 .name = decl.name,
-                .type = @Type(.{
-                    .Pointer = .{
-                        .size = .One,
-                        .is_const = true,
-                        .is_volatile = false,
-                        .alignment = 0,
-                        .address_space = .generic,
-                        .child = @Type(.{
-                            .Fn = .{
-                                .calling_convention = .Unspecified,
-                                .alignment = funcInfo.alignment,
-                                .is_generic = funcInfo.is_generic,
-                                .is_var_args = funcInfo.is_var_args,
-                                .return_type = funcInfo.return_type,
-                                .params = &params,
-                            },
-                        }),
-                        .is_allowzero = false,
-                        .sentinel = null,
-                    },
-                }),
+                .type = ftype,
                 .default_value = null,
                 .is_comptime = false,
-                .alignment = 0,
+                .alignment = if (@sizeOf(ftype) > 0) @alignOf(ftype) else 0,
             };
 
             i += 1;
