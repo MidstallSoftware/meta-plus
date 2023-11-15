@@ -11,10 +11,11 @@ pub fn fromDecls(comptime T: type) type {
 
         for (decls, 0..) |decl, i| {
             const f = @field(T, decl.name);
+            const ftype = if (@typeInfo(@TypeOf(f)) == .Type) f else @TypeOf(f);
             fieldsList[i] = .{
                 .name = decl.name,
-                .type = if (@typeInfo(@TypeOf(f)) == .Type) f else @TypeOf(f),
-                .alignment = i,
+                .type = ftype,
+                .alignment = if (@sizeOf(ftype) > 0) @alignOf(ftype) else 0,
             };
         }
 

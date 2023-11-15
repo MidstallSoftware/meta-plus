@@ -21,5 +21,6 @@ pub fn expectEqual(comptime Expected: type, comptime Actual: type) !void {
     inline for (expectedInfo.fields, actualInfo.fields) |a, b| {
         try testing.expectEqualStrings(a.name, b.name);
         try testing.expectEqual(a.type, b.type);
+        try testing.expectEqual(a.alignment, b.alignment);
     }
 }
