@@ -46,7 +46,6 @@ pub fn mix(comptime Super: type, comptime Extend: type) type {
     const superInfo = types.ensure(Super, .Enum) orelse @panic("Super type must be a enum");
     const extendInfo = types.ensure(Extend, .Enum) orelse @panic("Extend type must be a enum");
 
-    if (extendInfo.tag_type != superInfo.tag_type) @compileError("Super and extend enums tag types must be the same");
     if (extendInfo.is_exhaustive != superInfo.is_exhaustive) @compileError("Super and extend enums tag types must both be exhaustive or not");
 
     var totalFields = superInfo.fields.len;
@@ -73,18 +72,9 @@ pub fn mix(comptime Super: type, comptime Extend: type) type {
         fields[index].value += superInfo.fields.len;
     }
 
-    const superMax = std.math.maxInt(superInfo.tag_type);
-    const extendMax = std.math.maxInt(extendInfo.tag_type);
-    const totalMax = superMax + extendMax;
-
     return @Type(.{
         .Enum = .{
-            .tag_type = if (totalMax >= fields.len) @Type(.{
-                .Int = .{
-                    .signedness = .unsigned,
-                    .bits = (@typeInfo(superInfo.tag_type).Int.bits + @typeInfo(extendInfo.tag_type).Int.bits) - 1,
-                },
-            }) else superInfo.tag_type,
+            .tag_type = std.math.IntFittingRange(0, fields.len - 1),
             .fields = &fields,
             .decls = &.{},
             .is_exhaustive = superInfo.is_exhaustive,
