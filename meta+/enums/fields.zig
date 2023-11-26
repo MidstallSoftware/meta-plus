@@ -48,6 +48,9 @@ pub fn mix(comptime Super: type, comptime Extend: type) type {
 
     if (extendInfo.is_exhaustive != superInfo.is_exhaustive) @compileError("Super and extend enums tag types must both be exhaustive or not");
 
+    if (extendInfo.tag_type == u0 and extendInfo.fields.len == 0) return superInfo;
+    if (superInfo.tag_type == u0 and superInfo.fields.len == 0) return extendInfo;
+
     var totalFields = superInfo.fields.len;
 
     for (extendInfo.fields) |field| {
