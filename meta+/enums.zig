@@ -53,6 +53,10 @@ pub fn fromDecls(comptime T: type) type {
     }
 }
 
+test {
+    _ = fields;
+}
+
 test "fromFields using a struct" {
     const decls = struct {
         a: u8,
