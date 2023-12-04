@@ -7,6 +7,9 @@ const types = struct {
 
     /// Fields type module for structs
     pub const structs = @import("structs/fields.zig");
+
+    /// Field type module for unions
+    pub const unions = @import("unions/fields.zig");
 };
 
 pub usingnamespace types;
@@ -16,6 +19,7 @@ pub fn of(comptime T: type) type {
     return switch (@typeInfo(T)) {
         .Enum => types.enums,
         .Struct => types.structs,
+        .Union => types.unions,
         else => |f| @compileError("Not supported: " + @tagName(f)),
     };
 }
@@ -29,7 +33,7 @@ pub fn method(comptime T: type, comptime name: []const u8, args: functions.param
 
 /// Removes the field which matches name
 pub fn remove(comptime T: type, comptime name: []const u8) type {
-    return method(T, "name", .{ T, name });
+    return method(T, "remove", .{ T, name });
 }
 
 /// Renames the field which matches name

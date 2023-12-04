@@ -3,6 +3,8 @@ const testing = std.testing;
 const metaTesting = @import("testing.zig").unions;
 const enums = @import("enums.zig");
 
+pub const fields = @import("unions/fields.zig");
+
 /// Generates a union from the declarations of a type
 pub fn fromDecls(comptime T: type) type {
     comptime {
