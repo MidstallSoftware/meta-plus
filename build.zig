@@ -8,7 +8,7 @@ pub fn build(b: *std.Build) void {
     const no_docs = b.option(bool, "no-docs", "skip installing documentation") orelse false;
 
     const vizops = b.addModule("meta+", .{
-        .source_file = .{ .path = b.pathFromRoot("meta+.zig") },
+        .root_source_file = .{ .path = b.pathFromRoot("meta+.zig") },
     });
 
     const step_test = b.step("test", "Run all unit tests");
@@ -33,7 +33,7 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    exe_example.addModule("meta+", vizops);
+    exe_example.root_module.addImport("meta+", vizops);
     b.installArtifact(exe_example);
 
     if (!no_docs) {

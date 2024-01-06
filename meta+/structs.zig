@@ -53,7 +53,7 @@ pub fn vTable(comptime T: type) type {
                     .size = .One,
                     .is_const = true,
                     .is_volatile = false,
-                    .alignment = if (@sizeOf(fntype) > 0) @alignOf(fntype) else 0,
+                    .alignment = 0,
                     .address_space = .generic,
                     .child = fntype,
                     .is_allowzero = false,
